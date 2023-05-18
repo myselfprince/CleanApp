@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "186656030995",
+    "project_id": "ecocollect-44b3a",
+    "storage_bucket": "ecocollect-44b3a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:186656030995:android:b49ee0b8fcb56bbff5dae6",
+        "android_client_info": {
+          "package_name": "com.cleanapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "186656030995-l827m83akvsnfb7cjjdp5ev585md481p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeKeFtjfExWaZ7HOnzSX05970hpRBmcF0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "186656030995-l827m83akvsnfb7cjjdp5ev585md481p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
