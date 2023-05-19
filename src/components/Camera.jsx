@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   Dimensions,
   Image,
@@ -11,6 +12,7 @@ import {
 } from 'react-native';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import storage from '@react-native-firebase/storage';
+
 import ImageResizer from 'react-native-image-resizer';
 
 export default function Header(props) {
@@ -18,6 +20,7 @@ export default function Header(props) {
   const device = devices.back;
   const camera = useRef(null);
   const [imageData, setImageData] = useState('');
+  const [location, setLocation] = useState('');
   const [takePhotoClicked, setTakePhotoClicked] = useState(false);
 
   useEffect(() => {
@@ -32,13 +35,44 @@ export default function Header(props) {
 
   const showAlert = () => {
     Alert.alert(
-      'Uploaded',
-      'Image Uploaded Successfully to Firebase Database.',
+      'Uploaded Successfully',
+      'Image and Location Uploaded Successfully to Firebase Database.',
       [
         { text: 'OK', onPress: () => console.log('OK Pressed') }
       ]
     );
   };
+
+  // const uploadLocation = async (location) => {
+  //   try {
+  //     const reference = storage().ref(`locations/${Date.now()}.txt`);
+  //     await reference.putString(location);
+  
+  //     console.log('Location uploaded successfully');
+  //     uploadImage();
+  //   } catch (error) {
+  //     console.error('Error uploading location:', error);
+  //   }
+  // };
+
+  const uploadLocation = async (location) => {
+    try {
+      const reference = storage().ref(`locations/${Date.now()}.txt`);
+      await reference.putString(location);
+  
+    } catch (error) {
+      console.error('Error uploading location:', error);
+    }
+  };
+
+  const handleConfirmClick = () => {
+    setTakePhotoClicked(true);
+  };
+
+  const handleUploadImage = () => {
+    uploadImage();
+  };
+  
 
   const uploadImage = async () => {
     // console.log(imageData);
@@ -56,6 +90,8 @@ export default function Header(props) {
     await reference.put(blob);
 
     showAlert();
+    setImageData("")
+    uploadLocation(location);
   };
 
   const resizeImage = async (imagePath) => {
@@ -101,6 +137,15 @@ export default function Header(props) {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           {imageData !== '' && <Image source={{ uri: 'file://' + imageData }} style={{ width: 309, height: 550 }} />}
 
+
+          <TextInput
+          style={styles.input}
+          placeholder="Enter location"
+          placeholderTextColor={"black"}
+          value={location}
+          onChangeText={setLocation}
+        />
+
           <TouchableOpacity
             style={{
               width: '90%',
@@ -112,11 +157,15 @@ export default function Header(props) {
               alignItems: 'center',
               marginTop: 10,
             }}
-            onPress={() => {
-              setTakePhotoClicked(true);
-            }}
+            onPress={handleConfirmClick}
+            // onPress={() => {
+              
+            //   setTakePhotoClicked(true);
+            //   // uploadImage();
+            //   uploadLocation(location);
+            // }}
           >
-            <Text style={{ color: 'black' }}>Click Photo</Text>
+            <Text style={{ color: 'black' }}>Confirm & Click Photo</Text>
           </TouchableOpacity>
 
      {  imageData &&   <TouchableOpacity
@@ -131,9 +180,10 @@ export default function Header(props) {
               marginTop: 10,
               backgroundColor: 'green',
             }}
-            onPress={() => {
-              uploadImage();
-            }}
+            onPress={handleUploadImage}
+            // onPress={() => {
+            //   uploadImage();
+            // }}
           >
             <Text style={{ color: 'white' }}>Upload Image</Text>
           </TouchableOpacity>}
@@ -144,3 +194,16 @@ export default function Header(props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  input: {
+    width: '90%',
+    color:"black",
+    height: 50,
+    borderWidth: 1,
+    // alignSelf: 'center',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginTop: 10,
+  },
+});
